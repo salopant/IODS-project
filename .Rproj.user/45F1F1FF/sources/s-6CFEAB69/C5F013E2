@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1541260572639.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "64419319",
+    "id" : "C5F013E2",
+    "lastKnownWriteTime" : 1541260940,
+    "last_content_update" : 1541260940385,
+    "path" : "C:/Users/antti/asalo/Opinnot/Intro to open data science/IODS-project/chapter3.Rmd",
+    "project_path" : "chapter3.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "5,23",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

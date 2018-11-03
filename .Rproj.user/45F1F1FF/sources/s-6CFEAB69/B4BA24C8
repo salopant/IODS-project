@@ -7,13 +7,13 @@
     "folds" : "",
     "hash" : "2386875797",
     "id" : "B4BA24C8",
-    "lastKnownWriteTime" : 1541177064,
-    "last_content_update" : 1541177064396,
+    "lastKnownWriteTime" : 1541261565,
+    "last_content_update" : 1541261565749,
     "path" : "C:/Users/antti/asalo/Opinnot/Intro to open data science/IODS-project/index.Rmd",
     "project_path" : "index.Rmd",
     "properties" : {
-        "cursorPosition" : "2,23",
-        "scrollLine" : "0"
+        "cursorPosition" : "25,0",
+        "scrollLine" : "4"
     },
     "relative_order" : 2,
     "source_on_save" : false,

@@ -1,0 +1,13 @@
+# Week 2 results
+
+This week I have refreshed my knowledge of linear regression analysis and learned something new about model validation. Practical model validation can be done with graphical plots such as plotting the fitted values vs the corresponding residuals (the error between fit and real value), Normal QQ-plot (Theoretical Quantiles vs. Standardized residual) and Residuals vs. leverage. 
+
+## Useful links and resources
+### Link to some videos
+Regression analysis
+
+https://player.vimeo.com/video/199820260
+
+Model validation
+
+https://player.vimeo.com/video/199820384

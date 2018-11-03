@@ -15,6 +15,9 @@ https://mooc.helsinki.fi/course/view.php?id=158#section-1
 #### Data camp exercise
 https://www.datacamp.com/courses/r-short-and-sweet
 
+#### Course diary instructions
+https://emmakarolina.github.io/instructions/#the_course_diary_web_page
+
 ### My results
 
 #### My github repository
