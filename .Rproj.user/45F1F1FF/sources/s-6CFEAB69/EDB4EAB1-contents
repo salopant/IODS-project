@@ -1,0 +1,9 @@
+---
+output: github_document
+    fig_width: 5
+    fig_height: 5
+    dev: jpeg
+---
+This course, Introduction to Open Data Science, will teach me how to utilize the open data in data science projects. I will learn how to scrap, wrangle and analyse the data and how to collaborate with other people using tools such as Github and R studio.
+
+My Github repository can be found at https://salopant.github.io/IODS-project
