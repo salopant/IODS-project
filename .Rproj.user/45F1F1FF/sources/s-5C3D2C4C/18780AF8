@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1541603813840.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "18780AF8",
+    "lastKnownWriteTime" : 1541664299,
+    "last_content_update" : 1541664299918,
+    "path" : "C:/Users/antti/asalo/Opinnot/Intro to open data science/IODS-project/data/create_learning2014.R",
+    "project_path" : "data/create_learning2014.R",
+    "properties" : {
+        "cursorPosition" : "37,57",
+        "scrollLine" : "13",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
