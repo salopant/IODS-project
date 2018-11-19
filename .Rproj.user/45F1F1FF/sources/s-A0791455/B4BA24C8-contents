@@ -3,8 +3,11 @@ title: "IODS course project"
 author: "Antti Salopuro"
 output:
   html_document:
-    theme: cosmo
+    theme: journal
     toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true    
     toc_depth: 4
     fig_caption: true
     fig_width: 6

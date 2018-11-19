@@ -314,10 +314,23 @@ $(document).ready(function () {
 <p>This week I learned</p>
 <p>Wrangling:</p>
 <ul>
-<li>how to join data from two dataframes by using values of several columns as keys in matching</li>
-<li>example: math_por &lt;- inner_join(math,por,by=join_us,suffix=c(“.math”, “.por”))</li>
-<li>how to create new columns by calculating factors from existing columns</li>
-<li>example: cols &lt;- select(alc,one_of(c(“Dalc”,“Walc”))) *** alc[“alc_use”] &lt;- rowMeans(cols)</li>
+<li><p>how to join data from two dataframes by using values of several columns as keys in matching</p></li>
+<li><p>example: math_por &lt;- inner_join(math,por,by=join_us,suffix=c(“.math”, “.por”))</p></li>
+<li><p>how to create new columns by calculating factors from existing columns</p></li>
+<li><p>example: cols &lt;- select(alc,one_of(c(“Dalc”,“Walc”))) *** alc[“alc_use”] &lt;- rowMeans(cols)</p></li>
+<li><p>mutate dataframe: my_data &lt;- mutate(my_data, prediction = probability &gt; 0.5)</p></li>
+</ul>
+<p>Analysis:</p>
+<ul>
+<li>Draw bar plots with ggplot + geom_bar</li>
+<li>create cross tabulated data summaries with group_by + summarise</li>
+<li>draw box plots with ggplot + geom_boxplot</li>
+<li>build logistic regression model with glm()</li>
+<li>apply pipe as %&gt;%</li>
+<li>compute odds ratios &amp; confidence intervals with coef() %&gt;% exp</li>
+<li>compute confidence interval with confint() %&gt;% exp</li>
+<li>make predictions using the model as probabilities &lt;- predict(m, type = “response”)</li>
+<li>make confusion matrix with table as table(high_use = my_dataDOLhigh_use, prediction = my_dataDOLprediction)</li>
 </ul>
 <div id="useful-links-and-resources" class="section level2">
 <h2>Useful links and resources</h2>
@@ -382,7 +395,51 @@ str(alc)</code></pre>
 ##  $ alc_use   : num  1 1 2.5 1 1.5 1.5 1 1 1 1 ...
 ##  $ high_use  : logi  FALSE FALSE TRUE FALSE FALSE FALSE ...</code></pre>
 <p>Target is to study what might explain the alcohol consumption level of the respondents, with logistic regression.</p>
-<p>I choose to make research on features: parent status (together/apart), number of failures in courses, romantice relationship (yes/no) and absense from school. My hypotheses is that parents not living together increase the amount consumption as does a higher number of absences and failures in previous classes in school. A romantic relationship probably protects from extensive alcohol use.</p>
+<p>The explanations for the variables:</p>
+<ul>
+<li><code>school</code> - student’s school (binary: ‘GP’ - Gabriel Pereira or ‘MS’ - Mousinho da Silveira) +<code>sex</code> - student’s sex (binary: ‘F’ - female or ‘M’ - male)</li>
+<li><code>age</code> - student’s age (numeric: from 15 to 22)</li>
+<li><code>address</code> - student’s home address type (binary: ‘U’ - urban or ‘R’ - rural)</li>
+<li><code>famsize</code> - family size (binary: ‘LE3’ - less or equal to 3 or ‘GT3’ - greater than 3)</li>
+<li><code>Pstatus</code> - parent’s cohabitation status (binary: ‘T’ - living together or ‘A’ - apart) + <code>Medu</code> - mother’s education (numeric: 0 - none, 1 - primary education (4th grade), 2 = 5th to 9th grade, 3 = secondary education or 4 = higher education)</li>
+<li><code>Fedu</code> - father’s education (numeric: 0 - none, 1 - primary education (4th grade), 2 = 5th to 9th grade, 3 = secondary education or 4 = higher education)</li>
+<li><code>Mjob</code> - mother’s job (nominal: ‘teacher’, ‘health’ care related, civil ‘services’ (e.g. administrative or police), ‘at_home’ or ‘other’)</li>
+<li><code>Fjob</code> - father’s job (nominal: ‘teacher’, ‘health’ care related, civil ‘services’ (e.g. administrative or police), ‘at_home’ or ‘other’)</li>
+<li><code>reason</code> - reason to choose this school (nominal: close to ‘home’, school ‘reputation’, ‘course’ preference or ‘other’)</li>
+<li><code>guardian</code> - student’s guardian (nominal: ‘mother’, ‘father’ or ‘other’)</li>
+<li><code>traveltime</code> - home to school travel time (numeric: 1 - &lt;15 min., 2 - 15 to 30 min., 3 - 30 min. to 1 hour, or 4 - &gt;1 hour)</li>
+<li><code>studytime</code> - weekly study time (numeric: 1 - &lt;2 hours, 2 - 2 to 5 hours, 3 - 5 to 10 hours, or 4 - &gt;10 hours)</li>
+<li><code>failures</code> - number of past class failures (numeric: n if 1&lt;=n&lt;3, else 4)</li>
+<li><code>schoolsup</code> - extra educational support (binary: yes or no)</li>
+<li><code>famsup</code> - family educational support (binary: yes or no)</li>
+<li><code>paid</code> - extra paid classes within the course subject (Math or Portuguese) (binary: yes or no)</li>
+<li><code>activities</code> - extra-curricular activities (binary: yes or no)</li>
+<li><code>nursery</code> - attended nursery school (binary: yes or no)</li>
+<li><code>higher</code> - wants to take higher education (binary: yes or no)</li>
+<li><code>internet</code> - Internet access at home (binary: yes or no)</li>
+<li><code>romantic</code> - with a romantic relationship (binary: yes or no)</li>
+<li><code>famrel</code> - quality of family relationships (numeric: from 1 - very bad to 5 - excellent)</li>
+<li><code>freetime</code> - free time after school (numeric: from 1 - very low to 5 - very high)</li>
+<li><code>goout</code> - going out with friends (numeric: from 1 - very low to 5 - very high)</li>
+<li><code>Dalc</code> - workday alcohol consumption (numeric: from 1 - very low to 5 - very high)</li>
+<li><code>Walc</code> - weekend alcohol consumption (numeric: from 1 - very low to 5 - very high)</li>
+<li><code>health</code> - current health status (numeric: from 1 - very bad to 5 - very good)</li>
+<li><code>absences</code> - number of school absences (numeric: from 0 to 93)</li>
+</ul>
+<p>These grades are related with the course subject, Math or Portuguese:</p>
+<ul>
+<li><code>G1</code> - first period grade (numeric: from 0 to 20)</li>
+<li><code>G2</code> - second period grade (numeric: from 0 to 20)</li>
+<li><code>G3</code> - final grade (numeric: from 0 to 20, output target)</li>
+</ul>
+<p>I choose to make research on features:</p>
+<ul>
+<li><code>parent status</code> (together/apart)</li>
+<li><code>number of failures</code> in courses</li>
+<li><code>romantic relationship</code> (yes/no)</li>
+<li><code>absense from school</code></li>
+</ul>
+<p>My hypotheses is that parents not living together increase the amount consumption as does a higher number of absences and failures in previous classes in school. A romantic relationship probably protects from extensive alcohol use.</p>
 <pre class="r"><code>library(dplyr)</code></pre>
 <pre><code>## 
 ## Attaching package: 'dplyr'</code></pre>
@@ -563,7 +620,7 @@ table(high_use = my_data$high_use, prediction = my_data$prediction)</code></pre>
 ## high_use FALSE TRUE
 ##    FALSE   258   10
 ##    TRUE     99   15</code></pre>
-<p>The confusion matrix shows that the model is not very good in predicting high level use of alcohol.</p>
+<p>This confusion matrix above shows that the model is not very good in predicting high level use of alcohol. Only 15 cases of 114 are correctly predicted</p>
 <p>Same thing graphically:</p>
 <pre class="r"><code># initialize a plot of 'high_use' versus 'probability' in 'alc'
 g &lt;- ggplot(my_data, aes(x = probability, y = high_use))
