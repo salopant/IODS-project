@@ -6,6 +6,7 @@ editor_options:
 # Week 4 results
 
 ##Topics
+
 This week I learned 
 
 Analysis: Clustering and classification i.e. unsupervised ML
@@ -21,6 +22,7 @@ Description: https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html
 ## Material (Emma Kämäräinen & Tuomo Nieminen):
 
 ### Videos
+
 Classification: Linear Discriminant Analysis
 
 https://player.vimeo.com/video/203184662
@@ -41,6 +43,7 @@ Corrplot: https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-in
 ## Analysis
 
 ###Upload data (Boston)
+
 ```{r}
 #Antti Salopuro
 #23.11.2018 
@@ -62,6 +65,7 @@ pairs(Boston)
 ```
 
 ### Description
+
 Illustrate with some nice graphs (library PerformanceAnalysis)
 ```{r}
 library(PerformanceAnalytics)
@@ -72,6 +76,7 @@ chart.Correlation(Boston)
 ### Data features with some anaysis
 
 #### crim
+
 per capita crime rate by town.
 
 ```{r}
@@ -81,6 +86,7 @@ hist(Boston$crim,freq = F)
 Seems that the crime rate has big variation, highest value, 88.97 suggests that in some region in Boston there really is a huge amount of crimes identified. Still, in most suburbs (89%) the rate stays below 10. 
 
 #### zn
+
 proportion of residential land zoned for lots over 25,000 sq.ft.
 
 ```{r}
@@ -89,47 +95,60 @@ hist(Boston$zn,freq = F)
 Most of the lots are relatively small, this is natural as when a big lot is split into smaller pieces, it always produces two or more new lots which increases the frequency of small lots more than it decreses the number of bigger ones.
 
 #### indus
+
 proportion of non-retail business acres per town.
 
 This feature varies between 0 and 25, and there seems to be quite a few suburs where the business is solely retail but also some suburbs have more these industrial businesses. 
 
 #### chas
+
 Charles River dummy variable (= 1 if tract bounds river; 0 otherwise).
 
 
 #### nox
+
 nitrogen oxides concentration (parts per 10 million).
 
 #### rm
+
 average number of rooms per dwelling.
 
 Almost like normally distributed variable with average of 6.2. 
 
 #### age
+
 proportion of owner-occupied units built prior to 1940.
 
 #### dis
+
 weighted mean of distances to five Boston employment centres.
 
 #### rad
+
 index of accessibility to radial highways.
 
 #### tax
+
 full-value property-tax rate per \$10,000.
 
 #### ptratio
+
 pupil-teacher ratio by town.
 
 #### black
+
 1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town.
 
 #### lstat
+
 lower status of the population (percent).
 
 #### medv
+
 median value of owner-occupied homes in \$1000s.
 
 ### Additional notes of features
+
 Interesting notes about correlation graph: the crime rate seems to be extremely high only in some suburbs that are near to the city center. Also high crime rate happens only in suburbs with higher proportion of old houses (age) These are the same suburbs where also property taxes are high and smaller lots. Apparently this means that in the central areas the crime rates may be high.
 
 In city center the lots are small, taxes higher and also the pollution (nox) level is higher.
@@ -141,6 +160,7 @@ Nitrogen oxid concentration nox is an interesting feature, especially when looke
 In city center, the number of rooms per dwelling can be practically anything, when getting further from the center, the number of rooms has less variance staying closer to the mean value 6.2.  
 
 #### Correlation plot
+
 ```{r}
 library(corrplot)
 library(dplyr)
@@ -157,6 +177,7 @@ corrplot(cor_matrix, method="circle", type="upper", cl.pos = "b", tl.pos = "d", 
 
 
 ### Scale data 
+
 Data standardization scales all explanatory variables such that their mean value and standard deviation are the same. The mean value become zero (0) and the standard deviation becomes one (1). This is required here since we want to apply discriminant analysis, which assumes that variables are normally distributed and that their variance is same. 
 
 Scaling & Transfer into a dataframe:
@@ -177,7 +198,9 @@ boston_scaled <- as.data.frame(boston_scaled)
 ```
 
 
-### Create a categorical variable of crime rate with four categories: low, med_low, med_high, high
+### Crime rate categories
+
+Create a categorical variable of crime rate with four categories: low, med_low, med_high, high
 
 ```{r}
 # MASS, Boston and boston_scaled are available
@@ -218,6 +241,7 @@ test <- boston_scaled[-ind,]
 ```
 
 ### LDA model fit
+
 Fit LDA on the train set. crime rate is the target and all other variables are predictors
 
 ```{r}
@@ -250,6 +274,7 @@ lda.arrows(lda.fit, myscale = 2)
 
 
 ### Predict test data crime rates
+
 Save the real crime rates of the test data in variable correct_classes and then make prediction
 ```{r}
 # save the correct classes from test data
