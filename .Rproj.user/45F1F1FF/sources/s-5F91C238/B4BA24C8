@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "3797011729",
     "id" : "B4BA24C8",
-    "lastKnownWriteTime" : 1542620054,
-    "last_content_update" : 1542620054481,
+    "lastKnownWriteTime" : 1543162738,
+    "last_content_update" : 1543162738376,
     "path" : "C:/Users/antti/asalo/Opinnot/Intro to open data science/IODS-project/index.Rmd",
     "project_path" : "index.Rmd",
     "properties" : {
-        "cursorPosition" : "4,16",
-        "scrollLine" : "0"
+        "cursorPosition" : "34,23",
+        "scrollLine" : "14"
     },
     "relative_order" : 2,
     "source_on_save" : false,
