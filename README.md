@@ -11,5 +11,6 @@ people using tools such as Github and R studio.
 My course diary can be found at
 <https://salopant.github.io/IODS-project/>
 
-
++Data is what
++ data is what it is
 
