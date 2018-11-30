@@ -1,9 +1,0 @@
----
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
-# Week 5 results
-
-Link to data wrangling part (R script)
-https://github.com/salopant/IODS-project/blob/master/data/human.R

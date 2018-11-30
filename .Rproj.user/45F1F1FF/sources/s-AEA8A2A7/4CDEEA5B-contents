@@ -1,0 +1,187 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Week 5 results
+
+## Useful links
+
+### Video
+
+Dimension reduction and PCA:
+
+http://player.vimeo.com/video/204164956
+
+Biplots:
+
+http://player.vimeo.com/video/204165420
+
+MCA:
+
+http://player.vimeo.com/video/204251158
+
+### Slides
+The presentation slides related to the videos above are here:
+https://tuomonieminen.github.io/Helsinki-Open-Data-Science/#/54
+
+
+### Other links
+Some useful links related to this weeks topics:
+
+PCA explained visually http://setosa.io/ev/principal-component-analysis/
+Mathematical tutorial on PCA https://arxiv.org/pdf/1404.1100.pdf
+Biplots in practise (e-book by Michael Greenacre) http://www.multivariatestatistics.org/biplots.html
+Correspondence analysis - general purpose https://documents.software.dell.com/statistics/textbook/correspondence-analysis#general
+The FactoMineR webpage http://factominer.free.fr/
+
+Link to data wrangling part (R script)
+https://github.com/salopant/IODS-project/blob/master/data/human.R
+
+## Data analysis
+
+```{r}
+human <- read.csv("./data/human.csv")
+str(human)
+head(human)
+# look at the (column) names of human
+names(human)
+
+# look at the structure of human
+str(human)
+
+# print out summaries of the variables
+summary(human)
+
+```
+
+```{r}
+# tidyr package and human are available
+
+# access the stringr package
+library(stringr)
+
+# look at the structure of the GNI column in 'human'
+str(human$GNI)
+
+# remove the commas from GNI and print out a numeric version of it
+human$GNI = str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric()
+head(human)
+
+```
+
+```{r}
+library(dplyr)
+keep <- c("Country", "Edu2F", "LabFM", "LifeEx", "ExpEduYrs", "GNI", "MaternMortR", "AdoBirthR", "PctReprParl")
+# human with modified GNI and dplyr are available
+
+# select the 'keep' columns
+human <- dplyr::select(human, one_of(keep))
+
+# print out a completeness indicator of the 'human' data
+complete.cases(human)
+
+# print out the data along with a completeness indicator as the last column
+data.frame(human[-1], comp = complete.cases(human))
+
+# filter out all rows with NA values
+human_ <- filter(human, complete.cases(human))
+head(human_)
+```
+
+```{r}
+# human without NA is available
+
+# look at the last 10 observations of human
+tail(human_,10)
+
+# define the last indice we want to keep
+last <- nrow(human_) - 7
+
+# choose everything until the last 7 observations
+human_ <- human_[1:last, ]
+
+# add countries as rownames
+rownames(human_) <- human_$Country
+```
+
+```{r}
+library(dplyr)
+library(corrplot)
+# remove the Country variable
+human_ <- dplyr::select(human_, -Country)
+
+# Access GGally
+library(GGally)
+
+# visualize the 'human_' variables
+ggpairs(human_)
+
+# compute the correlation matrix and visualize it with corrplot
+cor(human_) %>% corrplot()
+```
+
+#### PCA
+```{r}
+# modified human is available
+library(stats)
+# standardize the variables
+human_std <- scale(human_)
+
+# print out summaries of the standardized variables
+summary(human_std)
+
+# perform principal component analysis (with the SVD method)
+pca_human <- prcomp(human_std)
+
+# draw a biplot of the principal component representation and the original variables
+biplot(pca_human, choices = 1:2, cex = c(0.8, 1), col=c("grey40", "deeppink2"))
+```
+
+
+```{r}
+# pca_human, dplyr are available
+
+# create and print out a summary of pca_human
+s <- summary(pca_human)
+
+
+# rounded percetanges of variance captured by each PC
+pca_pr <- round(100*s$importance[2, ], digits = 1)
+
+# print out the percentages of variance
+pca_pr
+
+# create object pc_lab to be used as axis labels
+pc_lab <- paste0(names(pca_pr), " (", pca_pr, "%)")
+
+# draw a biplot
+biplot(pca_human, cex = c(0.8, 1), col = c("grey40", "deeppink2"), xlab = pc_lab[1], ylab = pc_lab[2])
+
+```
+
+```{r}
+# the tea dataset and packages FactoMineR, ggplot2, dplyr and tidyr are available
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(FactoMineR)
+data(tea)
+
+# column names to keep in the dataset
+keep_columns <- c("Tea", "How", "how", "sugar", "where", "lunch")
+
+# select the 'keep_columns' to create a new dataset
+tea_time <- dplyr::select(tea, one_of(keep_columns))
+
+# look at the summaries and structure of the data
+summary(tea_time)
+str(tea_time)
+
+
+
+# visualize the dataset
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() + theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 8))
+
+```
+How did it go?

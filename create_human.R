@@ -54,10 +54,41 @@ human <- join(hd,gii,by="Country",type="inner")
 head(human)
 dim(human)
 
-write.csv(human, "./data/human.csv", row.names = FALSE)
+# Week 5, data wrangling 
+# access the stringr package
+library(stringr)
+
+# look at the structure of the GNI column in 'human'
+str(human$GNI)
+
+# remove the commas from GNI and print out a numeric version of it
+human$GNI = str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric()
+
+# Keep only meaningful columns
+keep <- c("Country", "Edu2F", "LabFM", "LifeEx", "ExpEduYrs", "GNI", "MaternMortR", "AdoBirthR", "PctReprParl")
+# human with modified GNI and dplyr are available
+
+# select the 'keep' columns
+human <- select(human, one_of(keep))
+
+
+# filter out all rows with NA values
+human_ <- filter(human, complete.cases(human))
+
+#drop rows where country name is not country but a continent or other region
+# choose everything until the last 7 observations
+human_ <- human_[1:last, ]
+
+# add countries as rownames
+rownames(human_) <- human_$Country
+# remove the Country variable
+#human_ <- select(human_, -Country)
+head(human_)
+
+write.csv(human_, "./data/human_mod.csv", row.names = FALSE)
 
 #Verify if the data was saved/read correctly
-verify <- read.csv("./data/human.csv")
+verify <- read.csv("./data/human_mod.csv")
 str(verify)
 head(verify)
 

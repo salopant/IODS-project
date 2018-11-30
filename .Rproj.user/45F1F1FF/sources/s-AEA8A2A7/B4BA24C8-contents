@@ -8,7 +8,7 @@ output:
     toc_float:
       collapsed: false
       smooth_scroll: true    
-    toc_depth: 4
+    toc_depth: 3
     fig_caption: true
     fig_width: 6
     fig_height: 4
@@ -40,3 +40,5 @@ output:
   
 ```{r child = "chapter5.Rmd"}
 ```
+
+***
