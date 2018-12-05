@@ -1,0 +1,277 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Week 6 results
+
+## Useful links
+
+### Video
+
+### Other sources
+
++ MABS Book chapter ~ https://www.crcpress.com/Multivariate-Analysis-for-the-Behavioral-Sciences-Second-Edition/Vehkalahti-Everitt/p/book/9780815385158
+
+### Data
+
+https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/BPRS.txt
+
+https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/rats.txt
+
+## Task 1: Implement the analyses of Chapter 8 of MABS using the RATS data 
+
+### Load data
+```{r}
+RATS = read.csv("./ratsl.csv")
+str(RATS)
+
+RATS$Group = factor(RATS$Group)
+RATS$ID = factor(RATS$ID)
+```
+
+### Scale data
+```{r}
+#Access the package ggplot2
+library(ggplot2)
+
+# Draw the plot
+ggplot(RATS, aes(x = wd, y = rats, linetype = ID)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(RATS$rats), max(RATS$rats)))
+
+# Standardise the variable bprs
+RATS <- RATS %>%
+  group_by(wd) %>%
+  mutate(stdrats = (rats - mean(rats))/sd(rats) ) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(RATS)
+
+# Plot again with the standardised rats
+ggplot(RATS, aes(x = wd, y = stdrats, linetype = ID)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ Group, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(name = "standardized rats", limits = c(min(RATS$stdrats), max(RATS$stdrats)))
+
+
+```
+
+### Summarize data 
+
+```{r}
+
+# Number of wd, baseline (wd1) included
+n <- RATS$wd %>% unique() %>% length()
+
+# Summary data with mean and standard error of bprs by treatment and week 
+RATSS <- RATS %>%
+  group_by(Group, wd) %>%
+  summarise( mean = mean(rats), se = sd(rats)/sqrt(n)) %>%
+               ungroup()
+             
+# Glimpse the data
+glimpse(RATSS)
+
+# Plot the mean profiles
+ggplot(RATSS, aes(x = wd, y = mean, linetype = Group, shape = Group)) +
+ geom_line() +
+ scale_linetype_manual(values = c(1,2,3)) +
+ geom_point(size=3) +
+ scale_shape_manual(values = c(1,2,3)) +
+ geom_errorbar(aes(ymin=mean-se, ymax=mean+se, linetype="1"), width=0.3) +
+ theme(legend.position = c(0.8,0.5)) +
+ scale_y_continuous(name = "mean(rats) +/- se(rats)")
+
+```
+
+### Pick data without the first week
+
+```{r}
+
+RATS8S <- RATS %>%
+  filter(wd > 1) %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(rats) ) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(RATS8S)
+
+# Draw a boxplot of the mean versus treatment
+ggplot(RATS8S, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(rats), wd 1-65")
+```
+
+### Filter out outliers
+
+```{r}
+
+# Create a new data by filtering the outlier and adjust the ggplot code the draw the plot again with the new data
+RATS8S1 <- RATS %>%
+  filter((wd > 1)&((rats > 250 & rats < 550))) %>%
+  group_by(Group, ID) %>%
+  summarise( mean=mean(rats) ) %>%
+  ungroup()
+
+# Glimpse the data
+glimpse(RATS8S1)
+
+# Draw a boxplot of the mean versus treatment
+ggplot(RATS8S1, aes(x = Group, y = mean)) +
+  geom_boxplot() +
+  stat_summary(fun.y = "mean", geom = "point", shape=23, size=4, fill = "white") +
+  scale_y_continuous(name = "mean(rats), wd 1-65")
+
+```
+
+### Anova
+
+```{r}
+ratsOrig <- read.table("https://raw.githubusercontent.com/KimmoVehkalahti/MABS/master/Examples/data/rats.txt", sep  ="\t", header = T)
+str(ratsOrig)
+
+```
+
+
+
+```{r}
+
+# Perform a two-sample t-test
+#t.test(mean ~ Group, data = RATS8S1, var.equal = TRUE)
+
+# Add the baseline from the original data as a new variable to the summary data
+RATS8S2 <- RATS8S %>%
+  mutate(baseline = ratsOrig$WD1)
+
+# Fit the linear model with the mean as the response 
+fit <- lm(mean ~ baseline + Group, data = RATS8S2)
+
+# Compute the analysis of variance table for the fitted model with anova()
+anova(fit)
+```
+
+### Conclusions
+
+The Anova results imply that the is not enough evidence that the different groups would develop differently in the treatment when the baseline is cancelled from the observation results, but on risk level 10% it would be so.
+
+## Task 2
+
+### Load data (already in long format)
+```{r}
+
+BPRSL = read.csv("./bprsl.csv")
+str(BPRSL)
+
+BPRSL$treatment = factor(BPRSL$treatment)
+BPRSL$subject = factor(BPRSL$subject)
+
+# Glimpse the data
+
+glimpse(BPRSL)
+```
+
+### Data plot
+```{r}
+# Check the dimensions of the data
+dim(BPRSL)
+
+# Plot the data
+ggplot(BPRSL, aes(x = week, y = bprs, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+```
+
+### Regression model
+
+```{r}
+# create a regression model
+BPRS_reg <- lm(bprs ~ treatment + week, data = BPRSL)
+# print out a summary of the model
+summary(BPRS_reg)
+
+```
+
+### Random intercept model
+
+```{r}
+# access library lme4
+library(lme4)
+
+# Create a random intercept model
+BPRS_ref <- lmer(bprs ~ week + treatment + (1 | subject), data = BPRSL, REML = FALSE)
+
+# Print the summary of the model
+summary(BPRS_ref)
+
+```
+
+Note: Pay attention to variability (standard deviation) of the subject
+
+### Random intercept and random slope model
+
+```{r}
+# create a random intercept and random slope model
+BPRS_ref1 <- lmer(bprs ~ week + treatment + (week | subject), data = BPRSL, REML = FALSE)
+
+# print a summary of the model
+summary(BPRS_ref1)
+
+# perform an ANOVA test on the two models
+anova(BPRS_ref1, BPRS_ref)
+```
+
+Note: Pay attention to the chi-squared statistics and p-value of the likelihood ratio test between BPRS_ref1 and BPRS_ref. The lower the value the better the fit against the comparison model.
+
+### Create a random intercept and random slope model with the interaction
+
+```{r}
+# create a random intercept and random slope model with the interaction
+BPRS_ref2 <- lmer(bprs ~ week + treatment + week*treatment + (week | subject), data = BPRSL, REML = FALSE)
+
+# print a summary of the model
+summary(BPRS_ref2)
+
+# perform an ANOVA test on the two models
+anova(BPRS_ref2, BPRS_ref1)
+
+
+```
+
+### Model fit, graphical interpretation
+
+```{r}
+# draw the plot of BPRS with the observed bprs values
+ggplot(BPRSL, aes(x = week, y = bprs, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+
+# Create a vector of the fitted values
+Fitted <- fitted(BPRS_ref2)
+
+# Create a new column fitted to BPRSL
+ BPRSL <- mutate(BPRSL, fit = Fitted)
+
+# draw the plot of BPRS with the Fitted values of bprs
+ggplot(BPRSL, aes(x = week, y = fit, linetype = subject)) +
+  geom_line() +
+  scale_linetype_manual(values = rep(1:10, times=4)) +
+  facet_grid(. ~ treatment, labeller = label_both) +
+  theme(legend.position = "none") + 
+  scale_y_continuous(limits = c(min(BPRSL$bprs), max(BPRSL$bprs)))
+```
+

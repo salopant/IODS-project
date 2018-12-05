@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1543996335337.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3CE6E837",
+    "lastKnownWriteTime" : 1544001816,
+    "last_content_update" : 1544001816575,
+    "path" : "C:/Users/antti/asalo/Opinnot/Intro to open data science/IODS-project/meet_and_repeat.R",
+    "project_path" : "meet_and_repeat.R",
+    "properties" : {
+        "cursorPosition" : "15,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
